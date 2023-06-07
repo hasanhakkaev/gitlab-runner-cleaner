@@ -1,0 +1,5 @@
+repos:
+  - repo: https://github.com/dirien/pre-commit-hooks
+    rev: v0.1.0 # Check for the latest version: https://github.com/dirien/pre-commit-hooks/releases
+    hooks:
+      - id: golangci-lint
