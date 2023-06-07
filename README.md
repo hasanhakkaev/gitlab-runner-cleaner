@@ -13,7 +13,7 @@ The runner cleaner queries the GitLab API for all the runners in the organizatio
 | DRY_RUN                         | Boolean  | no       | True      | Wether or not it runs in dry run and actually deletes runners.           |
 
 # Usage
-
+ 
 ```bash
  make run
 
