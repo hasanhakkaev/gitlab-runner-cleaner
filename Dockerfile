@@ -12,12 +12,12 @@ RUN go mod download -x
 COPY . .
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o=./glab-runner-cleaner .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o=./gitlab-runner-cleaner .
 
 FROM cgr.dev/chainguard/static:latest
 
 WORKDIR /app
-COPY --from=builder /src/glab-runner-cleaner .
+COPY --from=builder /src/gitlab-runner-cleaner .
 USER 65532:65532
 
-CMD ["./glab-runner-cleaner"]
+CMD ["./gitlab-runner-cleaner"]
