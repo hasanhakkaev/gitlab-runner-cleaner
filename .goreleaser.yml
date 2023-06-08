@@ -60,7 +60,7 @@ dockers:
   dockerfile: goreleaser.Dockerfile
   use: buildx
   build_flag_templates:
-  - --platform=linux/arm64/
+  - --platform=linux/arm64/v8
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description=A small utility to clean GitLab runners
   - --label=org.opencontainers.image.created={{.Date}}
@@ -70,14 +70,14 @@ dockers:
   - --label=org.opencontainers.image.licenses=Apache-2.0
 
 docker_manifests:
-- name_template: ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}
-  image_templates:
-  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64
-  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64
-- name_template: ghcr.io/hasanhakkaev/{{ .ProjectName }}:latest
-  image_templates:
-  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64
-  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64
+  - name_template: 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}'
+    image_templates:
+      - 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64'
+      - 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64'
+  - name_template: 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:latest'
+    image_templates:
+      - 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64'
+      - 'ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64'
 
 docker_signs:
 - cmd: cosign
