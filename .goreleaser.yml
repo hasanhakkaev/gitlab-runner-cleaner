@@ -1,0 +1,91 @@
+project_name: gitlab-runner-cleaner
+snapshot:
+  name_template: '{{ .Tag }}-SNAPSHOT'
+before:
+  hooks:
+    - go mod tidy
+builds:
+- env: [CGO_ENABLED=0]
+  goos:
+  - linux
+  - darwin
+  goarch:
+  - amd64
+  - arm64
+  mod_timestamp: '{{ .CommitTimestamp }}'
+  flags:
+    - -trimpath
+
+source:
+  enabled: true
+
+sboms:
+  - artifacts: archive
+  - id: source
+    artifacts: source
+
+checksum:
+  name_template: 'checksums.txt'
+
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '-y'
+      - '--output-certificate=${certificate}'
+      - '--bundle=${signature}'
+      - '${artifact}'
+    artifacts: all
+    output: true
+
+
+dockers:
+- image_templates: ["ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64"]
+  dockerfile: goreleaser.Dockerfile
+  use: buildx
+  build_flag_templates:
+  - --platform=linux/amd64
+  - --label=org.opencontainers.image.title={{ .ProjectName }}
+  - --label=org.opencontainers.image.description=A small utility to clean GitLab runners
+  - --label=org.opencontainers.image.created={{.Date}}
+  - --label=org.opencontainers.image.source={{.GitURL}}
+  - --label=org.opencontainers.image.version={{ .Version }}
+  - --label=org.opencontainers.image.revision={{ .FullCommit }}
+  - --label=org.opencontainers.image.licenses=Apache-2.0
+- image_templates: ["ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64"]
+  goarch: arm64
+  dockerfile: goreleaser.Dockerfile
+  use: buildx
+  build_flag_templates:
+  - --platform=linux/arm64/
+  - --label=org.opencontainers.image.title={{ .ProjectName }}
+  - --label=org.opencontainers.image.description=A small utility to clean GitLab runners
+  - --label=org.opencontainers.image.created={{.Date}}
+  - --label=org.opencontainers.image.source={{.GitURL}}
+  - --label=org.opencontainers.image.version={{ .Version }}
+  - --label=org.opencontainers.image.revision={{ .FullCommit }}
+  - --label=org.opencontainers.image.licenses=Apache-2.0
+
+docker_manifests:
+- name_template: ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}
+  image_templates:
+  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64
+  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64
+- name_template: ghcr.io/hasanhakkaev/{{ .ProjectName }}:latest
+  image_templates:
+  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64
+  - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64
+
+docker_signs:
+- cmd: cosign
+  env:
+    - COSIGN_EXPERIMENTAL=1
+  artifacts: manifests
+  output: true
+  args:
+    - 'sign'
+    - '-y'
+    - '${artifact}'
