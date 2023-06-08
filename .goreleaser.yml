@@ -79,13 +79,13 @@ docker_manifests:
   - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-amd64
   - ghcr.io/hasanhakkaev/{{ .ProjectName }}:{{ .Version }}-arm64
 
-  docker_signs:
-  - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
-    artifacts: manifests
-    output: true
-    args:
-      - 'sign'
-      - '-y'
-      - '${artifact}'
+docker_signs:
+- cmd: cosign
+  env:
+    - COSIGN_EXPERIMENTAL=1
+  artifacts: manifests
+  output: true
+  args:
+    - 'sign'
+    - '-y'
+    - '${artifact}'
