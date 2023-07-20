@@ -7,7 +7,7 @@ require (
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/stretchr/testify v1.8.4
-	github.com/xanzy/go-gitlab v0.87.0
+	github.com/xanzy/go-gitlab v0.88.0
 )
 
 require (
