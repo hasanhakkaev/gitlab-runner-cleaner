@@ -4,9 +4,8 @@ go 1.20
 
 require (
 	github.com/caarlos0/env/v8 v8.0.0
-	github.com/caarlos0/env/v9 v9.0.0
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/xanzy/go-gitlab v0.91.1
 )
 
